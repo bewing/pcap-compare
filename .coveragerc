@@ -1,0 +1,16 @@
+[paths]
+source =
+   src/pcap_compare
+   */site-packages/pcap_compare
+
+[run]
+branch = true
+source =
+    pcap_compare
+    tests
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit = *migrations*

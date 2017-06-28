@@ -1,0 +1,96 @@
+========
+Overview
+========
+
+.. start-badges
+
+.. list-table::
+    :stub-columns: 1
+
+    * - docs
+      - |docs|
+    * - tests
+      - | |travis| |requires|
+        | |codecov|
+    * - package
+      - | |version| |wheel| |supported-versions| |supported-implementations|
+        | |commits-since|
+
+.. |docs| image:: https://readthedocs.org/projects/pcap-compare/badge/?style=flat
+    :target: https://readthedocs.org/projects/pcap-compare
+    :alt: Documentation Status
+
+.. |travis| image:: https://travis-ci.org/bewing/pcap-compare.svg?branch=master
+    :alt: Travis-CI Build Status
+    :target: https://travis-ci.org/bewing/pcap-compare
+
+.. |requires| image:: https://requires.io/github/bewing/pcap-compare/requirements.svg?branch=master
+    :alt: Requirements Status
+    :target: https://requires.io/github/bewing/pcap-compare/requirements/?branch=master
+
+.. |codecov| image:: https://codecov.io/github/bewing/pcap-compare/coverage.svg?branch=master
+    :alt: Coverage Status
+    :target: https://codecov.io/github/bewing/pcap-compare
+
+.. |version| image:: https://img.shields.io/pypi/v/pcap-compare.svg
+    :alt: PyPI Package latest release
+    :target: https://pypi.python.org/pypi/pcap-compare
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/bewing/pcap-compare/v0.1.0.svg
+    :alt: Commits since latest release
+    :target: https://github.com/bewing/pcap-compare/compare/v0.1.0...master
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/pcap-compare.svg
+    :alt: PyPI Wheel
+    :target: https://pypi.python.org/pypi/pcap-compare
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/pcap-compare.svg
+    :alt: Supported versions
+    :target: https://pypi.python.org/pypi/pcap-compare
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/pcap-compare.svg
+    :alt: Supported implementations
+    :target: https://pypi.python.org/pypi/pcap-compare
+
+
+.. end-badges
+
+Library to analyze timestamp data for 'identical' packets in pcap files
+
+* Free software: BSD license
+
+Installation
+============
+
+::
+
+    pip install pcap-compare
+
+Documentation
+=============
+
+https://pcap-compare.readthedocs.io/
+
+Development
+===========
+
+To run the all tests run::
+
+    tox
+
+Note, to combine the coverage data from all the tox environments run:
+
+.. list-table::
+    :widths: 10 90
+    :stub-columns: 1
+
+    - - Windows
+      - ::
+
+            set PYTEST_ADDOPTS=--cov-append
+            tox
+
+    - - Other
+      - ::
+
+            PYTEST_ADDOPTS=--cov-append tox
