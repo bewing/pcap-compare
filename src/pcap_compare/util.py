@@ -10,7 +10,7 @@ def increment_bytestring(bstring):
         temp_list = []
         for b in bstring:
             temp_list.append(b)
-        b[-1] = b[-1] + 1
-        return bytes(b)
+        temp_list[-1] = temp_list[-1] + 1
+        return bytes(temp_list)
     else:
         return bstring[0:-1] + chr(ord(bstring[-1]) + 1)  # FIXME: hexwrap
