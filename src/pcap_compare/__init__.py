@@ -42,7 +42,8 @@ class PcapCompare(object):
                 # TODO LOG SOMETHING
                 continue
 
-            src_tuple = (tuple(frame.vlan_tags), frame.src, frame.dst, ip.src, ip.dst, ip.data.sport, ip.data.dport)
+            src_tuple = (tuple(frame.vlan_tags), frame.src, frame.dst,
+                         ip.src, ip.dst, ip.data.sport, ip.data.dport)
 
             src_hash = hash(src_tuple)
             if self.hdr_hash.get(src_hash, None) is None:
@@ -68,10 +69,12 @@ class PcapCompare(object):
                     },
                 })
             else:
-                if ts - self._pkt_hash[buf_hash]['start_time'] < 0 or abs(ts - self._pkt_hash[buf_hash]['start_time']) > self.max_offset:
+                if ts - self._pkt_hash[buf_hash]['start_time'] < 0 or abs(
+                        ts - self._pkt_hash[buf_hash]['start_time']) > self.max_offset:
                     self.dirty.add(buf_hash)
 
-                self._pkt_hash[buf_hash]['pkt_list'].update({src_hash: ts - self._pkt_hash[buf_hash]['start_time']})
+                self._pkt_hash[buf_hash]['pkt_list'].update(
+                    {src_hash: ts - self._pkt_hash[buf_hash]['start_time']})
 
     @property
     def pkt_hash(self):
