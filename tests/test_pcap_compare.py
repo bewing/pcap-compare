@@ -4,6 +4,7 @@ from io import BytesIO
 from click.testing import CliRunner
 
 from pcap_compare import PcapCompare
+from pcap_compare import util
 from pcap_compare.cli import main
 
 EXAMPLE_VLAN = []  # TODO: FIGURE THIS SHIT OUT
@@ -17,10 +18,10 @@ def test_pcap_compare():
     fobj = BytesIO()
     writer = dpkt.pcap.Writer(fobj, nano=True)
     test_frame, src = _create_udp_frame()
-    src['ip.src'] = src['ip.src'][0:-1] + chr(ord(src['ip.src'][-1]) + 1)
+    src['ip.src'] = util.increment_bytestring(src['ip.src'])
     test_frame2, _ = _create_udp_frame(signature=src)
     test_frame3, src = _create_udp_frame(b'bar')
-    src['ip.src'] = src['ip.src'][0:-1] + chr(ord(src['ip.src'][-1]) + 1)
+    src['ip.src'] = util.increment_bytestring(src['ip.src'])
     test_frame4, _ = _create_udp_frame(b'bar', signature=src)
     writer.writepkt(test_frame, ts=EXAMPLE_NANOSTAMP)
     writer.writepkt(test_frame2, ts=(EXAMPLE_NANOSTAMP + Decimal('1E-9')))
@@ -40,7 +41,7 @@ def test_pcap_misordered():
     fobj = BytesIO()
     writer = dpkt.pcap.Writer(fobj, nano=True)
     test_frame, src = _create_udp_frame()
-    src['ip.src'] = src['ip.src'][0:-1] + chr(ord(src['ip.src'][-1]) + 1)
+    src['ip.src'] = util.increment_bytestring(src['ip.src'])
     test_frame2, _ = _create_udp_frame(signature=src)
     writer.writepkt(test_frame, ts=EXAMPLE_NANOSTAMP)
     writer.writepkt(test_frame2, ts=(EXAMPLE_NANOSTAMP - Decimal('1E-9')))
@@ -58,7 +59,7 @@ def test_pcap_mask():
     fobj = BytesIO()
     writer = dpkt.pcap.Writer(fobj, nano=True)
     test_frame, src = _create_udp_frame()
-    src['ip.src'] = src['ip.src'][0:-1] + chr(ord(src['ip.src'][-1]) + 1)
+    src['ip.src'] = util.increment_bytestring(src['ip.src'])
     test_frame2, _ = _create_udp_frame(payload=b'B' + b'A'*99, signature=src)
     writer.writepkt(test_frame, ts=EXAMPLE_NANOSTAMP)
     writer.writepkt(test_frame2, ts=(EXAMPLE_NANOSTAMP + Decimal('1E-9')))
