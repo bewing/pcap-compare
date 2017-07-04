@@ -28,10 +28,11 @@ def test_pcap_compare():
     fobj.flush()
     fobj.seek(0)
     pc.process_file(fobj)
-    k, v = pc.pkt_hash.popitem()
-    # TODO:  Assert key
-    ret = sorted(v['pkt_list'].values())
-    assert ret[1] - ret[0] == Decimal('0.000000001')
+    while pc.pkt_hash:
+        k, v = pc.pkt_hash.popitem()
+        # TODO:  Assert key
+        ret = sorted(v['pkt_list'].values())
+        assert ret[1] - ret[0] == Decimal('0.000000001')
 
 
 def test_pcap_misordered():
@@ -86,6 +87,7 @@ def _create_udp_frame(payload=b'A'*100, signature={}):
     udp.data = payload
     udp.ulen += len(udp.data)
     ip = dpkt.ip.IP(src=sig['ip.src'], dst=sig['ip.dst'], p=17, data=udp)
-    frame = dpkt.ethernet.Ethernet(src=sig['eth.src'], dst=sig['eth.dst'], vlan_tags=sig['eth.vlan'], data=ip)
+    frame = dpkt.ethernet.Ethernet(
+        src=sig['eth.src'], dst=sig['eth.dst'], vlan_tags=sig['eth.vlan'], data=ip)
 
     return frame, sig
