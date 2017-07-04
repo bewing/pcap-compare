@@ -1,11 +1,9 @@
 from decimal import Decimal
 import dpkt
 from io import BytesIO
-from click.testing import CliRunner
 
 from pcap_compare import PcapCompare
 from pcap_compare import util
-from pcap_compare.cli import main
 
 EXAMPLE_VLAN = []  # TODO: FIGURE THIS SHIT OUT
 EXAMPLE_IP = b'\xC0\x00\x02\x01'  # 192.0.2.1
@@ -70,14 +68,6 @@ def test_pcap_mask():
     # TODO:  Assert key
     ret = sorted(v['pkt_list'].values())
     assert ret[1] - ret[0] == Decimal('0.000000001')
-
-
-def test_main():
-    runner = CliRunner()
-    result = runner.invoke(main, [])
-
-    assert result.output == '()\n'
-    assert result.exit_code == 0
 
 
 def _create_udp_frame(payload=b'A'*100, signature={}):
