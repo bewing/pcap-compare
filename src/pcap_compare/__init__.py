@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
 
+from decimal import Decimal
+
 import dpkt
 
 
@@ -10,8 +12,10 @@ class PcapCompare(object):
     # TODO Test replacing hash() with murmur if cpp
     def __init__(self):
         self.mask = (None, None)  # Slice tuple
-        self.pkt_hash = {}
+        self._pkt_hash = {}
         self.hdr_hash = {}
+        self.dirty = set()
+        self.max_offset = 0.5
 
     def process_file(self, fh):
         pcap = dpkt.pcap.Reader(fh)  # TODO BPF Filtering?
@@ -38,7 +42,6 @@ class PcapCompare(object):
                 # TODO LOG SOMETHING
                 continue
 
-
             src_tuple = (tuple(frame.vlan_tags), frame.src, frame.dst, ip.src, ip.dst, ip.data.sport, ip.data.dport)
 
             src_hash = hash(src_tuple)
@@ -50,33 +53,37 @@ class PcapCompare(object):
                         "eth.dst": frame.dst,
                         "ip.src": ip.src,
                         "ip.dst": ip.dst,
-                        "src_port": ip.data.sport,
-                        "dst_port": ip.data.dport,
+                        "sport": ip.data.sport,
+                        "dport": ip.data.dport,
                     },
                 })
-            buf_hash = hash(buf[slice(*self.mask)])
-            if self.pkt_hash.get(buf_hash, None) is None:
-                self.pkt_hash.update({
-                    buf_hash: []
+            buf_hash = hash(ip.data.data[slice(*self.mask)])
+            if self._pkt_hash.get(buf_hash, None) is None:
+                self._pkt_hash.update({
+                    buf_hash: {
+                        'start_time': ts,
+                        'pkt_list': {
+                            src_hash: Decimal(0),
+                        },
+                    },
                 })
-            self.pkt_hash.get(buf_hash).append((ts, src_hash))
+            else:
+                if ts - self._pkt_hash[buf_hash]['start_time'] < 0 or abs(ts - self._pkt_hash[buf_hash]['start_time']) > self.max_offset:
+                    self.dirty.add(buf_hash)
 
-    def process_stats(self, max_offset=0.5):
-        lose_by = {k: [] for k in self.hdr_hash.keys()}
-        while self.pkt_hash:
-            # Get next `unique` payload
-            h, pkt_list = self.pkt_hash.popitem()
-            # Sort by arrival time
-            pkt_list.sort(key=lambda tup: tup[0])
-            # Record first arrival time
-            start_time = pkt_list[0][0]
-            while pkt_list:
-                # Grab the next arrival
-                ts, src_hash = pkt_list.pop(0)
-                if ts - start_time > max_offset:
-                    # Greater than offset, treat remaining as `new` payload
-                    pkt_list.insert(0, (ts, src_hash))
-                    self.pkt_hash.update({h: pkt_list})
-                else:
-                    lose_by.get(src_hash).append(ts - start_time)
-        return lose_by
+                self._pkt_hash[buf_hash]['pkt_list'].update({src_hash: ts - self._pkt_hash[buf_hash]['start_time']})
+
+    @property
+    def pkt_hash(self):
+        if self.dirty:
+            self.__clean()
+        return self._pkt_hash
+
+    def __clean(self):
+        while self.dirty:
+            to_check = self.dirty.pop()
+            shift = sorted(self._pkt_hash[to_check]['pkt_list'].values())[0]
+            self._pkt_hash[to_check]['start_time'] += shift
+            for hsh, offset in self._pkt_hash[to_check]['pkt_list'].items():
+                self._pkt_hash[to_check]['pkt_list'].update({hsh: offset + shift})
+        self.dirty = set()
