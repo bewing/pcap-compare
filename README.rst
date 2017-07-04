@@ -11,7 +11,7 @@ Overview
       - |docs|
     * - tests
       - | |travis| |requires|
-        | |codecov|
+        | |coveralls|
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations|
         | |commits-since|
@@ -28,9 +28,9 @@ Overview
     :alt: Requirements Status
     :target: https://requires.io/github/bewing/pcap-compare/requirements/?branch=master
 
-.. |codecov| image:: https://codecov.io/github/bewing/pcap-compare/coverage.svg?branch=master
-    :alt: Coverage Status
-    :target: https://codecov.io/github/bewing/pcap-compare
+.. |coveralls| image:: https://coveralls.io/repos/github/bewing/pcap-compare/badge.svg?branch=master
+    :alt: Coveralls Status
+    :target: https://coveralls.io/github/bewing/pcap-compare?branch=master
 
 .. |version| image:: https://img.shields.io/pypi/v/pcap-compare.svg
     :alt: PyPI Package latest release
