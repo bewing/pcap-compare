@@ -67,6 +67,7 @@ setup(
     ],
     install_requires=[
         'click',
+        'dpkt',
     ],
     extras_require={
         # eg:
