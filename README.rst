@@ -64,12 +64,12 @@ Installation
 
 ::
 
-    pip install pcap-compare
+    pip install git+https://github.com/bewing/pcap-compare.git
 
 Documentation
 =============
 
-https://pcap-compare.readthedocs.io/
+Read the source
 
 Development
 ===========
