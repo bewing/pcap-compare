@@ -55,7 +55,7 @@ Overview
 
 .. end-badges
 
-Library to analyze timestamp data for "_identical_" (air-quotes) packets in pcap files
+Library to analyze timestamp data for "*identical*" (air-quotes) packets in pcap files
 
 * Free software: BSD license
 
