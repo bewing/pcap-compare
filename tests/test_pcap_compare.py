@@ -82,8 +82,6 @@ def test_pcap_offset():
     fobj.flush()
     fobj.seek(0)
     pc.process_file(fobj)
-    import pprint
-    pprint.pprint(pc._pkt_hash)
     while pc.pkt_hash:
         k, v = pc.pkt_hash.popitem()
         assert len(v['pkt_list']) == 1
