@@ -32,7 +32,7 @@ def test_pcap_compare():
         k, v = pc.pkt_hash.popitem()
         # TODO:  Assert key
         ret = sorted(v['pkt_list'].values())
-        assert ret[1] - ret[0] == Decimal('0.000000001')
+        assert ret[1] - ret[0] == Decimal('1E-9')
 
 
 def test_pcap_misordered():
