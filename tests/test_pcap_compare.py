@@ -53,8 +53,7 @@ def test_pcap_misordered():
 
 
 def test_pcap_mask():
-    pc = PcapCompare()
-    pc.mask = (1, None)
+    pc = PcapCompare(mask=(1, None))
     fobj = BytesIO()
     writer = dpkt.pcap.Writer(fobj, nano=True)
     test_frame, src = _create_udp_frame()
@@ -69,6 +68,25 @@ def test_pcap_mask():
     # TODO:  Assert key
     ret = sorted(v['pkt_list'].values())
     assert ret[1] - ret[0] == Decimal('0.000000001')
+
+
+def test_pcap_offset():
+    pc = PcapCompare(max_offset=Decimal('1E-9'))
+    fobj = BytesIO()
+    writer = dpkt.pcap.Writer(fobj, nano=True)
+    test_frame, src = _create_udp_frame()
+    src['ip.src'] = util.increment_bytestring(src['ip.src'])
+    test_frame2, _ = _create_udp_frame(signature=src)
+    writer.writepkt(test_frame, ts=EXAMPLE_NANOSTAMP)
+    writer.writepkt(test_frame2, ts=EXAMPLE_NANOSTAMP + Decimal('2E-9'))
+    fobj.flush()
+    fobj.seek(0)
+    pc.process_file(fobj)
+    import pprint
+    pprint.pprint(pc._pkt_hash)
+    while pc.pkt_hash:
+        k, v = pc.pkt_hash.popitem()
+        assert len(v['pkt_list']) == 1
 
 
 def _create_udp_frame(payload=b'A'*100, signature={}):
