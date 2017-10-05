@@ -10,6 +10,7 @@ from os.path import basename
 from os.path import dirname
 from os.path import join
 from os.path import splitext
+import uuid
 
 from pip.req import parse_requirements
 from setuptools import find_packages
@@ -18,6 +19,7 @@ from setuptools import setup
 
 install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
 reqs = [str(ir.req) for ir in install_reqs]
+
 
 def read(*names, **kwargs):
     return io.open(
