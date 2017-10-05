@@ -11,9 +11,13 @@ from os.path import dirname
 from os.path import join
 from os.path import splitext
 
+from pip.req import parse_requirements
 from setuptools import find_packages
 from setuptools import setup
 
+
+install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
+reqs = [str(ir.req) for ir in install_reqs]
 
 def read(*names, **kwargs):
     return io.open(
@@ -65,10 +69,7 @@ setup(
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
-    install_requires=[
-        'click',
-        'dpkt',
-    ],
+    install_requires=reqs,
     extras_require={
         # eg:
         #   'rst': ['docutils>=0.11'],

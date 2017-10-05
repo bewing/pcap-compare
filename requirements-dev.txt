@@ -1,0 +1,6 @@
+pytest
+pytest-travis-fold
+pytest-cov
+pylama
+tox
+-r requirements.txt
